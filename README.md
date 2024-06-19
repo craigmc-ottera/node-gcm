@@ -3,12 +3,6 @@
 [![Join the chat at https://gitter.im/ToothlessGear/node-gcm](https://badges.gitter.im/ToothlessGear/node-gcm.svg)](https://gitter.im/ToothlessGear/node-gcm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![npm](https://badge.fury.io/js/node-gcm.svg)](https://www.npmjs.com/package/node-gcm)
 
-**Note:** This package will stop working on June 21st, 2024, as it depends on the [Legacy FCM API](https://firebase.google.com/docs/cloud-messaging/migrate-v1). We urge you to migrate to another library that supports the FCM HTTP v1 API before the June 20th deadline, such as:
-1. [firebase-admin](https://www.npmjs.com/package/firebase-admin) (official library)
-2. [fcm-v1-http2](https://www.npmjs.com/package/fcm-v1-http2) (if scale and throughput are important to your sending requirements)
-
-----
-
 The goal of this project is providing the best and most easily used interface for Firebase Cloud Messaging. (The name `gcm` comes from the older name for the service, Google Cloud Messaging.)
 
 **By April 11, 2019 users must have [migrated from GCM to FCM](https://developers.google.com/cloud-messaging/android/android-migrate-fcm).**
@@ -30,15 +24,15 @@ Follow [PR #238](https://github.com/ToothlessGear/node-gcm/pull/238) to see curr
 $ npm install node-gcm --save
 ```
 
-**Note:** This package requires Node v12.0 and newer.
+**Note:** This package requires Node v4.0 and newer.
 
 ## Requirements
 
-This library provides the server-side implementation of FCM.
-You need to generate a [Legacy API Server Key](https://console.firebase.google.com/u/0/) (Click the gear next to FCM project name) > Project Settings > Cloud Messaging -> **Cloud Messaging API (Legacy)** -> Click the 3 dots -> Manage API in Google Cloud Console -> **Enable** -> Go back and refresh Firebase Cloud Messaging project settings page to view your **Server key**.
+This library provides the server-side implementation of GCM.
+You need to generate an [API Key](https://developers.google.com/cloud-messaging/gcm#apikey).
 
-FCM notifications can be sent to both [Android](https://firebase.google.com/docs/cloud-messaging/android/client) and [iOS](https://firebase.google.com/docs/cloud-messaging/ios/client).
-If you are new to FCM you should probably look into the [documentation](https://firebase.google.com/docs/cloud-messaging).
+GCM notifications can be sent to both [Android](https://developers.google.com/cloud-messaging/android/start) and [iOS](https://developers.google.com/cloud-messaging/ios/start).
+If you are new to GCM you should probably look into the [documentation](https://developers.google.com/cloud-messaging/gcm).
 
 ## Example application
 
@@ -131,14 +125,6 @@ sender.send(message, { registrationTokens: registrationTokens }, 10, function (e
   if(err) console.error(err);
   else    console.log(response);
 });
-
-// Q: I need to remove all expired / unregistered tokens from my database, how do I do that?
-//    The results-array does not contain any tokens!
-// A: The array of tokens used for sending will match the array of results, so you can cross-check them.
-sender.send(message, { registrationTokens: registrationTokens }, function (err, response) {
-  var failed_tokens = registrationTokens.filter((token, i) => response.results[i].error === 'NotRegistered');
-  console.log('These tokens are no longer registered:', failed_tokens);
-});
 ```
 ## Recipients
 
@@ -147,7 +133,7 @@ You can send push notifications to various recipient types by providing one of t
 
 |Key|Type|Description|
 |---|---|---|
-|to|String|A single [registration token](https://firebase.google.com/docs/cloud-messaging/android/client#sample-register), [notification key](https://firebase.google.com/docs/cloud-messaging/android/device-group), or [topic](https://firebase.google.com/docs/cloud-messaging/android/topic-messaging).
+|to|String|A single [registration token](https://developers.google.com/cloud-messaging/android/client#sample-register), [notification key](https://developers.google.com/cloud-messaging/notifications), or [topic](https://developers.google.com/cloud-messaging/topic-messaging).
 |topic|String|A single publish/subscribe topic.
 |condition|String|Multiple topics using the [condition](https://firebase.google.com/docs/cloud-messaging/topic-messaging) parameter.
 |notificationKey|String|Deprecated. A key that groups multiple registration tokens linked to the same user.
@@ -157,7 +143,7 @@ You can send push notifications to various recipient types by providing one of t
 If you provide an incorrect recipient key or object type, an `Error` object will be returned to your callback.
 
 Notice that [you can *at most* send notifications to 1000 registration tokens at a time](https://github.com/ToothlessGear/node-gcm/issues/42).
-This is due to [a restriction](https://firebase.google.com/docs/cloud-messaging/http-server-ref#downstream-http-messages-json) on the side of the FCM API.
+This is due to [a restriction](http://developer.android.com/training/cloudsync/gcm.html) on the side of the GCM API.
 
 
 ### Additional message options
@@ -167,13 +153,11 @@ This is due to [a restriction](https://firebase.google.com/docs/cloud-messaging/
 |collapseKey|Optional, string|This parameter identifies a group of messages that can be collapsed, so that only the last message gets sent when delivery can be resumed.|
 |priority|Optional, string|Sets the priority of the message. Valid values are "normal" and "high."|
 |contentAvailable|Optional, JSON boolean|On iOS, when a notification or message is sent and this is set to true, an inactive client app is awoken.|
-|mutableContent|Optional, JSON boolean|On iOS, Currently for iOS 10+ devices only. On iOS, use this field to represent mutable-content in the APNs payload. When a notification is sent and this is set to true, the content of the notification can be modified before it is displayed, using a Notification Service app extension.|
-|timeToLive|Optional, JSON number|This parameter specifies how long (in seconds) the message should be kept in FCM storage if the device is offline. The maximum time to live supported is 4 weeks, and the default value is 4 weeks.|
+|timeToLive|Optional, JSON number|This parameter specifies how long (in seconds) the message should be kept in GCM storage if the device is offline. The maximum time to live supported is 4 weeks, and the default value is 4 weeks.|
 |restrictedPackageName|Optional, string|This parameter specifies the package name of the application where the registration tokens must match in order to receive the message.|
 |dryRun|Optional, JSON boolean|This parameter, when set to true, allows developers to test a request without actually sending a message.|
 |data|Optional, JSON object|This parameter specifies the custom key-value pairs of the message's payload.|
 |notification|Optional, JSON object|This parameter specifies the predefined, user-visible key-value pairs of the notification payload. See "Notification payload option table" below for more details.|
-|fcm_options|Optional, JSON object|This parameter is used to pass FCM specific options, as outlined [here](https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages#FcmOptions).
 
 ## Notification usage
 
@@ -214,11 +198,11 @@ message.addNotification({
 |title_loc_args|iOS|Optional, JSON array as string|Indicates the string value to replace format specifiers in title string for localization. On iOS, this corresponds to "title-loc-args" in APNS payload.|
 |title_loc_key|iOS|Optional, string|Indicates the key to the title string for localization. On iOS, this corresponds to "title-loc-key" in APNS payload.|
 
-Notice notification payload defined in [FCM Connection Server Reference](https://firebase.google.com/docs/cloud-messaging/http-server-ref#downstream-http-messages-json)
+Notice notification payload defined in [GCM Connection Server Reference](https://developers.google.com/cloud-messaging/server-ref#table1)
 
 ## Custom HTTP request options
 
-You can provide custom `request` options such as `proxy` and `timeout` for the HTTP request to the FCM API. For more information, refer to [the complete list of request options](https://github.com/request/request#requestoptions-callback). Note that the following options cannot be overriden: `method`, `uri`, `body`, as well as the following headers: `Authorization`, `Content-Type`, and `Content-Length`.
+You can provide custom `request` options such as `proxy` and `timeout` for the HTTP request to the GCM API. For more information, refer to [the complete list of request options](https://github.com/request/request#requestoptions-callback). Note that the following options cannot be overriden: `method`, `uri`, `body`, as well as the following headers: `Authorization`, `Content-Type`, and `Content-Length`.
 
 ```js
 // Set custom request options
@@ -239,9 +223,9 @@ sender.send(message, { registrationTokens: regTokens }, function (err, response)
 });
 ```
 
-## FCM client compatibility
+## GCM client compatibility
 
-As of January 9th, 2016, there are a few known compatibility issues with 3rd-party FCM client libraries:
+As of January 9th, 2016, there are a few known compatibility issues with 3rd-party GCM client libraries:
 
 ### phonegap-plugin-push
 
@@ -253,7 +237,7 @@ These issues are out of this project's context and can only be fixed by the resp
 
 ## Debug
 
-To enable debug mode (print requests and responses to and from FCM),
+To enable debug mode (print requests and responses to and from GCM),
 set the `DEBUG` environment flag when running your app (assuming you use `node app.js` to run your app):
 
 ```bash
