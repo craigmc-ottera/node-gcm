@@ -5,27 +5,29 @@
       "/Users/cmceldowney/node/codes-pushd"
     ]
   ],
-  "_from": "node-gcm@1.0.2",
+  "_from": "git+https://github.com/craigmc-ottera/node-gcm.git#36516fa",
   "_id": "node-gcm@1.0.2",
   "_inBundle": false,
-  "_integrity": "sha512-NEVb5jB06I/e9ZfJGWhHsRhJQLk1zO5iZjbQJ7su8j9vhHrpxc7KJHyBxWbv28+4uWFZ0AfTVHoMIyRpEVISUQ==",
+  "_integrity": "",
   "_location": "/node-gcm",
-  "_phantomChildren": {},
+  "_phantomChildren": {
+    "ms": "2.1.2"
+  },
   "_requested": {
-    "type": "version",
-    "registry": true,
-    "raw": "node-gcm@1.0.2",
+    "type": "git",
+    "raw": "node-gcm@git+https://github.com/craigmc-ottera/node-gcm.git#36516fa",
     "name": "node-gcm",
     "escapedName": "node-gcm",
-    "rawSpec": "1.0.2",
-    "saveSpec": null,
-    "fetchSpec": "1.0.2"
+    "rawSpec": "git+https://github.com/craigmc-ottera/node-gcm.git#36516fa",
+    "saveSpec": "git+https://github.com/craigmc-ottera/node-gcm.git#36516fa",
+    "fetchSpec": "https://github.com/craigmc-ottera/node-gcm.git",
+    "gitCommittish": "36516fa"
   },
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/node-gcm/-/node-gcm-1.0.2.tgz",
-  "_spec": "1.0.2",
+  "_resolved": "git+https://github.com/craigmc-ottera/node-gcm.git#36516faf2ac2678e2ce24bb7c3b64c4794995924",
+  "_spec": "node-gcm@git+https://github.com/craigmc-ottera/node-gcm.git#36516fa",
   "_where": "/Users/cmceldowney/node/codes-pushd",
   "author": {
     "name": "Marcus Farkas",
@@ -34,6 +36,7 @@
   "bugs": {
     "url": "https://github.com/ToothlessGear/node-gcm/issues"
   },
+  "bundleDependencies": false,
   "contributors": [
     {
       "name": "Marcus Farkas",
@@ -213,6 +216,7 @@
     "lodash": "^4.17.10",
     "request": "2.87.0"
   },
+  "deprecated": false,
   "description": "Easy interface for Google's Cloud Messaging service (now Firebase Cloud Messaging)",
   "devDependencies": {
     "chai": "^2.2.0",
